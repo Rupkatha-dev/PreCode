@@ -2,267 +2,155 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { EXERCISES } from "@/lib/exercises"
 
-function getProgress(): number[] {
-  if (typeof window === "undefined") return []
-  try {
-    const stored = localStorage.getItem("precode-progress")
-    return stored ? JSON.parse(stored) : []
-  } catch {
-    return []
-  }
-}
-
-export default function CourseDashboard() {
-  const [completed, setCompleted] = useState<number[]>([])
+export default function LandingPage() {
   const [mounted, setMounted] = useState(false)
+  const [messages, setMessages] = useState<{ id: number; text: string; sender: 'ai' | 'user' }[]>([])
 
   useEffect(() => {
-    setCompleted(getProgress())
     setMounted(true)
+    
+    // Simulate dynamic chat messages
+    const sequence = [
+      { id: 1, text: "I need a landing page with a light orange theme.", sender: 'user' as const, delay: 1000 },
+      { id: 2, text: "Analyzing requirements...", sender: 'ai' as const, delay: 2000 },
+      { id: 3, text: "Generating premium SaaS design layout...", sender: 'ai' as const, delay: 3500 },
+      { id: 4, text: "Ready to deploy! ✨", sender: 'ai' as const, delay: 5000 },
+    ]
+
+    sequence.forEach(({ delay, ...msg }) => {
+      setTimeout(() => {
+        setMessages((prev) => [...prev, msg])
+      }, delay)
+    })
   }, [])
 
-  const completedCount = completed.length
-  const progressPercent = (completedCount / EXERCISES.length) * 100
-
-  function getCurrentExerciseId(): number {
-    for (const ex of EXERCISES) {
-      if (!completed.includes(ex.id)) return ex.id
-    }
-    return -1 // all done
-  }
-
-  const currentId = getCurrentExerciseId()
-  const allDone = currentId === -1
-
-  function getCardClass(exerciseId: number): string {
-    if (completed.includes(exerciseId)) return "glass-card-done"
-    if (exerciseId === currentId) return "glass-card-active"
-    return "glass-card"
-  }
-
-  function getDotClass(exerciseId: number): string {
-    if (completed.includes(exerciseId)) return "timeline-dot timeline-dot-done"
-    if (exerciseId === currentId) return "timeline-dot timeline-dot-active"
-    return "timeline-dot"
-  }
-
-  function isClickable(exerciseId: number): boolean {
-    return completed.includes(exerciseId) || exerciseId === currentId
-  }
-
-  function getStatusLabel(exerciseId: number): string {
-    if (completed.includes(exerciseId)) return "Completed"
-    if (exerciseId === currentId) return "Current"
-    return "Locked"
-  }
-
   return (
-    <main className="min-h-screen bg-black text-white">
-      {/* ── Hero Section ──────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Subtle gradient background orb */}
-        <div
-          className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px] pointer-events-none"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)",
-          }}
-        />
+    <div className="min-h-screen bg-white text-gray-900 relative overflow-hidden font-sans">
+      {/* Light Orange Gradients / Blobs */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[60%] bg-orange-100 rounded-full blur-[100px] opacity-70 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[60%] bg-orange-200 rounded-full blur-[120px] opacity-60 pointer-events-none" />
+      <div className="absolute top-[20%] right-[-5%] w-[40%] h-[40%] bg-[#fff3e0] rounded-full blur-[90px] opacity-80 pointer-events-none" />
 
-        <div className="relative max-w-3xl mx-auto px-6 pt-20 pb-12 text-center">
-          <div className="animate-fade-up">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 mb-4">
-              AI-Powered Learning
-            </p>
-            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-4">
-              <span className="gradient-text">PreCode</span>
-            </h1>
-            <p className="text-neutral-400 text-lg max-w-lg mx-auto leading-relaxed">
-              Think before you type. A structured course that teaches you to
-              plan, specify, and reflect on every function you write.
-            </p>
+      {/* Navigation */}
+      <nav className="relative z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg">
+            P
           </div>
+          <span className="text-xl font-bold tracking-tight text-gray-900">PreCode</span>
+        </div>
+        <div className="flex items-center gap-6">
+          <Link href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+            Dashboard
+          </Link>
+          <Link href="/dashboard" className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-all shadow-md hover:shadow-xl">
+            Get Started
+          </Link>
+        </div>
+      </nav>
 
-          {/* Progress bar */}
-          {mounted && (
-            <div className="mt-10 animate-fade-up delay-2">
-              <div className="flex items-center justify-between text-xs text-neutral-500 mb-2">
-                <span>Course Progress</span>
-                <span>
-                  {completedCount} / {EXERCISES.length} completed
-                </span>
+      {/* Hero Section */}
+      <main className="relative z-10 max-w-7xl mx-auto px-6 pt-20 pb-32 flex flex-col lg:flex-row items-center gap-16">
+        
+        {/* Text Content */}
+        <div className="flex-1 text-center lg:text-left animate-fade-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 border border-orange-100 text-orange-600 text-xs font-bold uppercase tracking-widest mb-8">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
+            </span>
+            Introducing PreCode 2.0
+          </div>
+          <h1 className="text-5xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-tight text-gray-900">
+            Think <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-rose-500">before</span> you type.
+          </h1>
+          <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+            An AI-powered educational platform that enforces a structured workflow. Plan your logic, specify behavior, and write better code.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+            <Link href="/dashboard" className="w-full sm:w-auto text-center font-semibold bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all transform hover:-translate-y-1">
+              Start Free Trial
+            </Link>
+            <button className="w-full sm:w-auto text-center font-semibold bg-white border border-gray-200 text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 hover:shadow-sm transition-all">
+              Watch Demo
+            </button>
+          </div>
+        </div>
+
+        {/* Dynamic Unsearchable Chatbox */}
+        <div className="flex-1 w-full max-w-lg lg:max-w-none relative animate-fade-up delay-2">
+          {/* Chat UI Container */}
+          <div className="bg-white/60 backdrop-blur-xl border border-white/40 shadow-2xl rounded-3xl overflow-hidden shadow-orange-900/5">
+            {/* Header */}
+            <div className="px-6 py-4 border-b border-gray-100/50 bg-white/40 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
+                <span className="text-sm font-semibold text-gray-700">PreCode AI</span>
               </div>
-              <div className="w-full h-2 bg-neutral-900 rounded-full overflow-hidden border border-neutral-800">
-                <div
-                  className="progress-bar-fill h-full"
-                  style={{ width: `${progressPercent}%` }}
-                />
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-gray-300"></div>
               </div>
             </div>
-          )}
-        </div>
-      </section>
 
-      {/* ── Exercise Timeline ──────────────────────────────── */}
-      <section className="max-w-2xl mx-auto px-6 pb-24">
-        <div className="relative">
-          {/* Vertical timeline line */}
-          <div
-            className="absolute left-[5px] top-4 bottom-4 timeline-line hidden sm:block"
-            aria-hidden="true"
-          />
-
-          <div className="space-y-4">
-            {EXERCISES.map((ex, idx) => {
-              const clickable = isClickable(ex.id)
-              const status = getStatusLabel(ex.id)
-              const isDone = completed.includes(ex.id)
-              const isCurrent = ex.id === currentId
-              const delayClass = `delay-${idx + 2}`
-
-              const card = (
-                <div
-                  className={`animate-fade-up ${delayClass} flex items-start gap-5`}
+            {/* Chat Body */}
+            <div className="p-6 h-[320px] overflow-y-auto flex flex-col gap-4">
+              {mounted && messages.map((msg) => (
+                <div 
+                  key={msg.id} 
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
                 >
-                  {/* Timeline dot */}
-                  <div className="pt-5 hidden sm:flex flex-col items-center">
-                    <div className={getDotClass(ex.id)} />
-                  </div>
-
-                  {/* Card */}
-                  <div
-                    className={`flex-1 ${getCardClass(ex.id)} p-5 ${
-                      clickable ? "cursor-pointer" : "opacity-40 cursor-not-allowed"
+                  <div 
+                    className={`max-w-[80%] px-5 py-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                      msg.sender === 'user' 
+                        ? 'bg-gradient-to-br from-orange-500 to-rose-500 text-white rounded-tr-none' 
+                        : 'bg-white border border-gray-100 text-gray-700 rounded-tl-none'
                     }`}
                   >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-3 mb-1.5">
-                          <span className="text-xs font-bold text-neutral-600">
-                            {String(idx + 1).padStart(2, "0")}
-                          </span>
-                          <h3 className="text-base font-semibold truncate">
-                            {ex.title}
-                          </h3>
-                        </div>
-                        <p className="text-sm text-neutral-500 leading-relaxed line-clamp-2">
-                          {ex.prompt}
-                        </p>
-                        <div className="flex flex-wrap items-center gap-2 mt-3">
-                          <span
-                            className={`badge ${
-                              ex.difficulty === "beginner"
-                                ? "badge-beginner"
-                                : "badge-intermediate"
-                            }`}
-                          >
-                            {ex.difficulty}
-                          </span>
-                          {ex.concepts.map((c) => (
-                            <span key={c} className="badge badge-concept">
-                              {c}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Status icon */}
-                      <div className="flex-shrink-0 mt-1">
-                        {isDone && (
-                          <div className="w-8 h-8 rounded-full bg-green-500/15 flex items-center justify-center">
-                            <svg
-                              className="w-4 h-4 text-green-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2.5}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                        {isCurrent && (
-                          <div className="w-8 h-8 rounded-full bg-violet-500/15 flex items-center justify-center">
-                            <svg
-                              className="w-4 h-4 text-violet-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M13 7l5 5m0 0l-5 5m5-5H6"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                        {!isDone && !isCurrent && (
-                          <div className="w-8 h-8 rounded-full bg-neutral-800/50 flex items-center justify-center">
-                            <svg
-                              className="w-4 h-4 text-neutral-600"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                              strokeWidth={2}
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                              />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Bottom action row for current */}
-                    {isCurrent && (
-                      <div className="mt-4 pt-3 border-t border-violet-500/15 flex items-center justify-between">
-                        <span className="text-xs text-violet-400 font-medium">
-                          Ready to start
-                        </span>
-                        <span className="text-xs text-violet-400/60">
-                          Click to begin &rarr;
-                        </span>
-                      </div>
-                    )}
+                    {msg.text}
                   </div>
                 </div>
-              )
+              ))}
+              {mounted && messages.length < 4 && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="bg-white border border-gray-100 px-5 py-3 rounded-2xl rounded-tl-none flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-100"></span>
+                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-200"></span>
+                  </div>
+                </div>
+              )}
+            </div>
 
-              return clickable ? (
-                <Link
-                  key={ex.id}
-                  href={`/exercise/${ex.id}`}
-                  className="block no-underline text-white"
+            {/* Unsearchable Input Footer */}
+            <div className="p-4 bg-gray-50/50 border-t border-gray-100/50">
+              <div className="relative group">
+                <input 
+                  type="text" 
+                  readOnly 
+                  disabled
+                  placeholder="Ask PreCode to generate a component..." 
+                  className="w-full bg-white border border-gray-200 text-gray-500 text-sm rounded-full pl-5 pr-12 py-3.5 focus:outline-none cursor-not-allowed shadow-sm group-hover:border-orange-200 transition-colors"
+                />
+                <button 
+                  disabled
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center cursor-not-allowed opacity-50"
                 >
-                  {card}
-                </Link>
-              ) : (
-                <div key={ex.id}>{card}</div>
-              )
-            })}
+                  <svg className="w-4 h-4 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 12h14M12 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
+
+          {/* Decorative Elements around chatbox */}
+          <div className="absolute -z-10 -top-8 -right-8 w-24 h-24 bg-gradient-to-br from-orange-400 to-rose-500 rounded-full blur-2xl opacity-40 animate-pulse"></div>
+          <div className="absolute -z-10 -bottom-8 -left-8 w-32 h-32 bg-orange-300 rounded-full blur-3xl opacity-50"></div>
         </div>
 
-        {/* All done CTA */}
-        {mounted && allDone && (
-          <div className="mt-12 text-center animate-fade-up">
-            <Link href="/complete" className="btn-primary inline-block no-underline">
-              View Course Summary
-            </Link>
-          </div>
-        )}
-      </section>
-    </main>
+      </main>
+    </div>
   )
 }
