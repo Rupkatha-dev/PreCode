@@ -1,0 +1,191 @@
+"use client"
+
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
+import Link from "next/link"
+import SpecBox from "@/components/SpecBox"
+import ChatBox from "@/components/ChatBox"
+import { getExercise, EXERCISES } from "@/lib/exercises"
+import type { Phase, Message, AIRequestBody, AIResponse } from "@/lib/types"
+
+const CodeBox = dynamic(() => import("@/components/CodeBox"), { ssr: false })
+
+function getProgress(): number[] {
+  if (typeof window === "undefined") return []
+  try {
+    const stored = localStorage.getItem("precode-progress")
+    return stored ? JSON.parse(stored) : []
+  } catch { return [] }
+}
+
+function markComplete(id: number) {
+  const progress = getProgress()
+  if (!progress.includes(id)) {
+    progress.push(id)
+    localStorage.setItem("precode-progress", JSON.stringify(progress))
+  }
+}
+
+export default function ExercisePage() {
+  const params = useParams()
+  const router = useRouter()
+  const exerciseId = Number(params.id)
+  const exercise = getExercise(exerciseId)
+
+  const [phase, setPhase] = useState<Phase>("spec")
+  const [spec, setSpec] = useState("")
+  const [clarifyMessages, setClarifyMessages] = useState<Message[]>([])
+  const [code, setCode] = useState("")
+  const [chatMessages, setChatMessages] = useState<Message[]>([])
+  const [aiReflection, setAiReflection] = useState("")
+  const [studentReflection, setStudentReflection] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    if (!exercise) router.push("/")
+  }, [exercise, router])
+
+  if (!exercise) {
+    return <main className="min-h-screen bg-black text-white flex items-center justify-center"><p className="text-neutral-500">Loading...</p></main>
+  }
+
+  const nextExercise = EXERCISES.find((e) => e.id === exerciseId + 1)
+  const phaseList: Phase[] = ["spec", "coding", "reflection", "done"]
+  const currentPhaseIndex = phaseList.indexOf(phase)
+
+  async function callAI(body: AIRequestBody): Promise<AIResponse> {
+    setIsLoading(true)
+    try {
+      const res = await fetch("/api/ai", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      return await res.json()
+    } finally { setIsLoading(false) }
+  }
+
+  async function handleAskAI() {
+    const data = await callAI({ type: "clarify", payload: { spec, history: clarifyMessages } })
+    setClarifyMessages(prev => [...prev, { role: "user", content: spec }, { role: "assistant", content: data.message }])
+    if (data.specReady) setPhase("coding")
+  }
+
+  async function handleChatSend(message: string) {
+    const data = await callAI({ type: "chat", payload: { code, message, history: chatMessages } })
+    setChatMessages(prev => [...prev, { role: "user", content: message }, { role: "assistant", content: data.message }])
+  }
+
+  async function handleSubmit() {
+    const data = await callAI({ type: "submit", payload: { spec, code } })
+    setAiReflection(data.message)
+    setPhase("reflection")
+  }
+
+  async function handleReflectionSubmit() {
+    if (!studentReflection.trim()) return
+    await callAI({ type: "save", payload: { spec, code, reflection: studentReflection, aiReflection } })
+    markComplete(exerciseId)
+    setPhase("done")
+  }
+
+  return (
+    <main className="min-h-screen bg-black text-white">
+      {/* Top bar */}
+      <div className="border-b border-neutral-800/60 px-6 py-4 bg-black/80 backdrop-blur-lg sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link href="/" className="text-neutral-600 hover:text-neutral-300 transition-colors" title="Back to course">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </Link>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-bold text-neutral-600">{String(exerciseId).padStart(2, "0")}</span>
+                <h1 className="text-base font-semibold">{exercise.title}</h1>
+                <span className={`badge ${exercise.difficulty === "beginner" ? "badge-beginner" : "badge-intermediate"}`}>{exercise.difficulty}</span>
+              </div>
+              <p className="text-neutral-500 text-xs mt-0.5">{exercise.prompt}</p>
+            </div>
+          </div>
+          <div className="hidden md:flex items-center gap-1">
+            {phaseList.map((p, i) => (
+              <div key={p} className="flex items-center gap-1">
+                {i > 0 && <div className="phase-connector" />}
+                <span className={`phase-step ${phase === p ? "phase-step-active" : i < currentPhaseIndex ? "phase-step-done" : ""}`}>
+                  {i < currentPhaseIndex && <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>}
+                  {p}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-6xl mx-auto px-6 py-8 animate-fade-in">
+        {phase === "spec" && (
+          <div className="animate-fade-up">
+            <div className="max-w-2xl mx-auto mb-6">
+              <div className="glass-card p-4 flex items-start gap-3">
+                <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                </div>
+                <div>
+                  <p className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-1">Hint</p>
+                  <p className="text-sm text-neutral-400 leading-relaxed">{exercise.starterHint}</p>
+                </div>
+              </div>
+            </div>
+            <SpecBox spec={spec} onSpecChange={setSpec} onAskAI={handleAskAI} messages={clarifyMessages} isLoading={isLoading} />
+          </div>
+        )}
+
+        {phase === "coding" && (
+          <div className="space-y-4 animate-fade-up">
+            <div className="flex gap-4" style={{ height: "65vh" }}>
+              <div className="flex-1"><CodeBox code={code} onCodeChange={setCode} isEnabled={true} /></div>
+              <div className="w-80 flex-shrink-0"><ChatBox messages={chatMessages} onSend={handleChatSend} isLoading={isLoading} /></div>
+            </div>
+            <div className="flex justify-end">
+              <button onClick={handleSubmit} disabled={isLoading || !code.trim()} className="btn-primary">{isLoading ? "Submitting..." : "Submit Code"}</button>
+            </div>
+          </div>
+        )}
+
+        {phase === "reflection" && (
+          <div className="max-w-2xl mx-auto space-y-6 animate-fade-up">
+            <div className="glass-card p-6">
+              <h2 className="text-sm font-semibold text-violet-400 uppercase tracking-wider mb-4">AI Feedback</h2>
+              <div className="text-neutral-300 text-sm whitespace-pre-wrap leading-relaxed">{aiReflection}</div>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Your Reflection</label>
+              <textarea value={studentReflection} onChange={(e) => setStudentReflection(e.target.value)} rows={5} placeholder="Write your reflection here..." className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-white text-sm placeholder-neutral-600 focus:outline-none focus:border-violet-500/50 resize-none transition-all" />
+            </div>
+            <button onClick={handleReflectionSubmit} disabled={isLoading || !studentReflection.trim()} className="btn-primary">{isLoading ? "Saving..." : "Complete Exercise"}</button>
+          </div>
+        )}
+
+        {phase === "done" && (
+          <div className="max-w-lg mx-auto text-center py-16 animate-fade-up">
+            <div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mx-auto mb-6 animate-check-pop">
+              <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+            </div>
+            <h2 className="text-2xl font-bold mb-2">Exercise Complete</h2>
+            <p className="text-neutral-500 mb-8 text-sm">Great job thinking before coding. Your session has been saved.</p>
+            <div className="flex items-center justify-center gap-3">
+              {nextExercise ? (
+                <>
+                  <Link href="/" className="btn-secondary inline-block no-underline">Dashboard</Link>
+                  <Link href={`/exercise/${nextExercise.id}`} className="btn-primary inline-block no-underline">Next: {nextExercise.title} &rarr;</Link>
+                </>
+              ) : (
+                <>
+                  <Link href="/" className="btn-secondary inline-block no-underline">Dashboard</Link>
+                  <Link href="/complete" className="btn-primary inline-block no-underline">View Course Summary &rarr;</Link>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </main>
+  )
+}
