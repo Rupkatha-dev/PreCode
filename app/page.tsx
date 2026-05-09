@@ -84,25 +84,25 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-950 text-white">
-      <div className="border-b border-gray-800 px-6 py-4">
+    <main className="min-h-screen bg-black text-white font-sans">
+      <div className="border-b border-neutral-800 px-6 py-4">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div>
-            <span className="text-xs font-semibold text-blue-400 uppercase tracking-widest">Exercise</span>
+            <span className="text-xs font-semibold text-neutral-400 uppercase tracking-widest">Exercise</span>
             <h1 className="text-xl font-bold mt-0.5">{EXERCISE.title}</h1>
-            <p className="text-gray-400 text-sm mt-1">{EXERCISE.prompt}</p>
+            <p className="text-neutral-500 text-sm mt-1">{EXERCISE.prompt}</p>
           </div>
           <div className="flex items-center gap-2 text-sm">
             {(["spec", "coding", "reflection", "done"] as Phase[]).map((p, i) => (
               <div key={p} className="flex items-center gap-2">
-                {i > 0 && <div className="w-6 h-px bg-gray-700" />}
+                {i > 0 && <div className="w-6 h-px bg-neutral-800" />}
                 <span
-                  className={`px-2 py-1 rounded text-xs font-medium capitalize ${
+                  className={`px-2 py-1 rounded-sm text-xs font-medium capitalize ${
                     phase === p
-                      ? "bg-blue-600 text-white"
+                      ? "bg-white text-black"
                       : i < (["spec", "coding", "reflection", "done"] as Phase[]).indexOf(phase)
-                      ? "text-green-400"
-                      : "text-gray-600"
+                      ? "text-neutral-400"
+                      : "text-neutral-600"
                   }`}
                 >
                   {p}
@@ -138,9 +138,9 @@ export default function Home() {
               <button
                 onClick={handleSubmit}
                 disabled={isLoading || !code.trim()}
-                className="px-6 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
+                className="px-6 py-2 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-sm font-medium transition-colors"
               >
-                {isLoading ? "Submitting…" : "Submit"}
+                {isLoading ? "Submitting..." : "Submit"}
               </button>
             </div>
           </div>
@@ -150,37 +150,37 @@ export default function Home() {
           <div className="max-w-2xl mx-auto space-y-6">
             <div>
               <h2 className="text-lg font-semibold mb-3">AI Feedback</h2>
-              <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 text-gray-200 whitespace-pre-wrap">
+              <div className="bg-neutral-900 border border-neutral-800 rounded-sm p-4 text-neutral-200 whitespace-pre-wrap">
                 {aiReflection}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Your reflection — answer the question above.
+              <label className="block text-sm font-medium text-neutral-400 mb-2">
+                Your reflection: answer the question above.
               </label>
               <textarea
                 value={studentReflection}
                 onChange={(e) => setStudentReflection(e.target.value)}
                 rows={5}
-                placeholder="Write your reflection here…"
-                className="w-full bg-gray-800 border border-gray-600 rounded-lg p-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 resize-none"
+                placeholder="Write your reflection here..."
+                className="w-full bg-black border border-neutral-800 rounded-sm p-3 text-white placeholder-neutral-600 focus:outline-none focus:border-white resize-none transition-colors"
               />
             </div>
             <button
               onClick={handleReflectionSubmit}
               disabled={isLoading || !studentReflection.trim()}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-lg font-medium transition-colors"
+              className="px-6 py-2 bg-white text-black hover:bg-neutral-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-sm font-medium transition-colors"
             >
-              {isLoading ? "Saving…" : "Complete"}
+              {isLoading ? "Saving..." : "Complete"}
             </button>
           </div>
         )}
 
         {phase === "done" && (
           <div className="max-w-2xl mx-auto text-center py-16">
-            <div className="text-5xl mb-4">✓</div>
+            <div className="text-5xl mb-4 text-white">✓</div>
             <h2 className="text-2xl font-bold mb-2">Flow Complete</h2>
-            <p className="text-gray-400">Your session has been saved. Good work thinking before coding.</p>
+            <p className="text-neutral-500">Your session has been saved. Good work thinking before coding.</p>
           </div>
         )}
       </div>

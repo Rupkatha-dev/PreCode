@@ -11,8 +11,8 @@ interface CodeBoxProps {
 export default function CodeBox({ code, onCodeChange, isEnabled }: CodeBoxProps) {
   return (
     <div
-      className={`h-full border rounded-lg overflow-hidden transition-opacity ${
-        isEnabled ? "border-gray-600 opacity-100" : "border-gray-800 opacity-50"
+      className={`h-full border rounded-sm overflow-hidden transition-opacity ${
+        isEnabled ? "border-neutral-700 opacity-100" : "border-neutral-900 opacity-50"
       }`}
     >
       <Editor
