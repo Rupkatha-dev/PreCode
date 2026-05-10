@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAnalytics, isSupported } from "firebase/analytics";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from "firebase/auth";
+import { getAuth, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut } from "firebase/auth";
 const firebaseConfig = {
   apiKey: "AIzaSyDFHqosxCqFx3g41MPxJ76GDESq-oPqmZE",
   authDomain: "precode-mvp.firebaseapp.com",
@@ -38,6 +38,17 @@ export const signInWithGoogle = async () => {
   }
 };
 
+export const githubProvider = new GithubAuthProvider();
+
+export const signInWithGithub = async () => {
+  try {
+    const result = await signInWithPopup(auth, githubProvider);
+    return result.user;
+  } catch (error) {
+    console.error("Error signing in with GitHub", error);
+    throw error;
+  }
+};
 export const logOut = async () => {
   try {
     await signOut(auth);
