@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { onAuthStateChanged, User } from "firebase/auth"
+import { auth, logOut } from "@/lib/firebase"
 import { EXERCISES } from "@/lib/exercises"
 
 function getProgress(): number[] {
@@ -17,11 +20,23 @@ function getProgress(): number[] {
 export default function CourseDashboard() {
   const [completed, setCompleted] = useState<number[]>([])
   const [mounted, setMounted] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
+  const router = useRouter()
 
   useEffect(() => {
     setCompleted(getProgress())
     setMounted(true)
-  }, [])
+
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        setUser(currentUser)
+      } else {
+        router.push('/')
+      }
+    })
+
+    return () => unsubscribe()
+  }, [router])
 
   const completedCount = completed.length
   const progressPercent = (completedCount / EXERCISES.length) * 100
@@ -60,6 +75,41 @@ export default function CourseDashboard() {
 
   return (
     <main className="min-h-screen bg-black text-white">
+      {/* ── Header / Navigation ──────────────────────────────── */}
+      {mounted && user && (
+        <header className="absolute top-0 left-0 right-0 z-50 p-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg">
+              P
+            </div>
+            <span className="text-xl font-bold tracking-tight text-white">PreCode</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="Avatar" className="w-8 h-8 rounded-full border border-neutral-800" />
+              ) : (
+                <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-sm font-bold">
+                  {user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'}
+                </div>
+              )}
+              <span className="text-sm font-medium text-neutral-300 hidden sm:block">
+                {user.displayName || user.email}
+              </span>
+            </div>
+            <button
+              onClick={async () => {
+                await logOut()
+                router.push('/')
+              }}
+              className="text-sm font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300 px-4 py-2 rounded-full hover:bg-neutral-800 hover:text-white transition-all shadow-md"
+            >
+              Log out
+            </button>
+          </div>
+        </header>
+      )}
+
       {/* ── Hero Section ──────────────────────────────────── */}
       <section className="relative overflow-hidden">
         {/* Subtle gradient background orb */}

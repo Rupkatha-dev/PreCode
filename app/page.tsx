@@ -2,13 +2,24 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { signInWithGoogle, auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false)
   const [messages, setMessages] = useState<{ id: number; text: string; sender: 'ai' | 'user' }[]>([])
+  const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check auth state
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        router.push('/dashboard')
+      }
+    })
     
     // Simulate dynamic chat messages
     const sequence = [
@@ -23,7 +34,18 @@ export default function LandingPage() {
         setMessages((prev) => [...prev, msg])
       }, delay)
     })
-  }, [])
+
+    return () => unsubscribe()
+  }, [router])
+
+  const handleLogin = async () => {
+    try {
+      await signInWithGoogle()
+      router.push('/dashboard')
+    } catch (error) {
+      console.error("Login failed", error)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900 relative overflow-hidden font-sans">
@@ -44,9 +66,9 @@ export default function LandingPage() {
           <Link href="/dashboard" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
             Dashboard
           </Link>
-          <Link href="/dashboard" className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-all shadow-md hover:shadow-xl">
+          <button onClick={handleLogin} className="text-sm font-semibold bg-gray-900 text-white px-5 py-2.5 rounded-full hover:bg-gray-800 transition-all shadow-md hover:shadow-xl">
             Get Started
-          </Link>
+          </button>
         </div>
       </nav>
 
@@ -69,9 +91,9 @@ export default function LandingPage() {
             An AI-powered educational platform that enforces a structured workflow. Plan your logic, specify behavior, and write better code.
           </p>
           <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
-            <Link href="/dashboard" className="w-full sm:w-auto text-center font-semibold bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all transform hover:-translate-y-1">
+            <button onClick={handleLogin} className="w-full sm:w-auto text-center font-semibold bg-gradient-to-r from-orange-500 to-rose-500 text-white px-8 py-4 rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all transform hover:-translate-y-1">
               Start Free Trial
-            </Link>
+            </button>
             <button className="w-full sm:w-auto text-center font-semibold bg-white border border-gray-200 text-gray-700 px-8 py-4 rounded-full hover:bg-gray-50 hover:shadow-sm transition-all">
               Watch Demo
             </button>
