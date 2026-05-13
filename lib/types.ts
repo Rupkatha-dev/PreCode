@@ -41,5 +41,6 @@ export type AIRequestBody =
 export interface AIResponse {
   message: string
   specReady?: boolean
+  rating?: number
   ok?: boolean
 }

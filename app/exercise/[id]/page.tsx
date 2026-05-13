@@ -36,6 +36,7 @@ export default function ExercisePage() {
   const [phase, setPhase] = useState<Phase>("level_select")
   const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel | null>(null)
   const [spec, setSpec] = useState("")
+  const [specRating, setSpecRating] = useState<number | null>(null)
   const [clarifyMessages, setClarifyMessages] = useState<Message[]>([])
   const [code, setCode] = useState("")
   const [chatMessages, setChatMessages] = useState<Message[]>([])
@@ -65,7 +66,10 @@ export default function ExercisePage() {
 
   async function handleAskAI() {
     const data = await callAI({ type: "clarify", payload: { prompt: exercise.levels[selectedLevel!].prompt, spec, history: clarifyMessages } })
-    setClarifyMessages(prev => [...prev, { role: "user", content: spec }, { role: "assistant", content: data.message }])
+    if (data.rating) setSpecRating(data.rating)
+    if (data.message) {
+      setClarifyMessages(prev => [...prev, { role: "user", content: spec }, { role: "assistant", content: data.message }])
+    }
     if (data.specReady) setPhase("coding")
   }
 
@@ -164,7 +168,7 @@ export default function ExercisePage() {
                 </div>
               </div>
             </div>
-            <SpecBox spec={spec} onSpecChange={setSpec} onAskAI={handleAskAI} messages={clarifyMessages} isLoading={isLoading} />
+            <SpecBox spec={spec} onSpecChange={setSpec} onAskAI={handleAskAI} messages={clarifyMessages} isLoading={isLoading} rating={specRating} />
           </div>
         )}
 

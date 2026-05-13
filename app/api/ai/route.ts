@@ -18,7 +18,12 @@ Your job:
 - Do NOT write code
 - Focus on inputs, outputs, edge cases, and constraints
 
-If the spec is sufficiently clear and covers inputs, outputs, and key edge cases, respond ONLY with the exact text: SPEC_READY: true`,
+CRITICAL INSTRUCTION:
+At the very end of your response, evaluate ONLY the MOST RECENT specification draft provided by the user. Rate its completeness from 1 to 5, ignoring any previous ratings. Format exactly as: RATING: X
+
+If the spec is sufficiently clear and covers inputs, outputs, and key edge cases, respond ONLY with the exact text:
+SPEC_READY: true
+RATING: 5`,
 
   chat: `You help students during coding.
 If they ask about syntax (e.g. how to use map, how to reverse a string, what does X mean), answer directly and concisely with a short example.
@@ -47,9 +52,19 @@ export async function POST(req: NextRequest) {
         temperature: 0.4,
         max_tokens: 512,
       })
-      const aiMessage = completion.choices[0].message.content ?? ""
-      const specReady = aiMessage.trim() === "SPEC_READY: true"
-      return NextResponse.json({ message: aiMessage, specReady })
+      let aiMessage = completion.choices[0].message.content ?? ""
+      
+      let rating: number | undefined = undefined
+      const ratingMatch = aiMessage.match(/RATING:\s*([1-5])/i)
+      if (ratingMatch) {
+        rating = parseInt(ratingMatch[1], 10)
+        aiMessage = aiMessage.replace(/RATING:\s*[1-5]/gi, "").trim()
+      }
+
+      const specReady = aiMessage.includes("SPEC_READY: true")
+      aiMessage = aiMessage.replace(/SPEC_READY:\s*true/g, "").trim()
+
+      return NextResponse.json({ message: aiMessage, specReady, rating })
     }
 
     if (body.type === "chat") {
