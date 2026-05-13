@@ -7,7 +7,7 @@ import Link from "next/link"
 import SpecBox from "@/components/SpecBox"
 import ChatBox from "@/components/ChatBox"
 import { getExercise, EXERCISES } from "@/lib/exercises"
-import type { Phase, Message, AIRequestBody, AIResponse } from "@/lib/types"
+import type { Phase, Message, AIRequestBody, AIResponse, DifficultyLevel } from "@/lib/types"
 
 const CodeBox = dynamic(() => import("@/components/CodeBox"), { ssr: false })
 
@@ -33,7 +33,8 @@ export default function ExercisePage() {
   const exerciseId = Number(params.id)
   const exercise = getExercise(exerciseId)
 
-  const [phase, setPhase] = useState<Phase>("spec")
+  const [phase, setPhase] = useState<Phase>("level_select")
+  const [selectedLevel, setSelectedLevel] = useState<DifficultyLevel | null>(null)
   const [spec, setSpec] = useState("")
   const [clarifyMessages, setClarifyMessages] = useState<Message[]>([])
   const [code, setCode] = useState("")
@@ -51,7 +52,7 @@ export default function ExercisePage() {
   }
 
   const nextExercise = EXERCISES.find((e) => e.id === exerciseId + 1)
-  const phaseList: Phase[] = ["spec", "coding", "reflection", "done"]
+  const phaseList: Phase[] = ["level_select", "spec", "coding", "reflection", "done"]
   const currentPhaseIndex = phaseList.indexOf(phase)
 
   async function callAI(body: AIRequestBody): Promise<AIResponse> {
@@ -63,18 +64,18 @@ export default function ExercisePage() {
   }
 
   async function handleAskAI() {
-    const data = await callAI({ type: "clarify", payload: { spec, history: clarifyMessages } })
+    const data = await callAI({ type: "clarify", payload: { prompt: exercise.levels[selectedLevel!].prompt, spec, history: clarifyMessages } })
     setClarifyMessages(prev => [...prev, { role: "user", content: spec }, { role: "assistant", content: data.message }])
     if (data.specReady) setPhase("coding")
   }
 
   async function handleChatSend(message: string) {
-    const data = await callAI({ type: "chat", payload: { code, message, history: chatMessages } })
+    const data = await callAI({ type: "chat", payload: { prompt: exercise.levels[selectedLevel!].prompt, code, message, history: chatMessages } })
     setChatMessages(prev => [...prev, { role: "user", content: message }, { role: "assistant", content: data.message }])
   }
 
   async function handleSubmit() {
-    const data = await callAI({ type: "submit", payload: { spec, code } })
+    const data = await callAI({ type: "submit", payload: { prompt: exercise.levels[selectedLevel!].prompt, spec, code } })
     setAiReflection(data.message)
     setPhase("reflection")
   }
@@ -99,9 +100,13 @@ export default function ExercisePage() {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-bold text-gray-400">{String(exerciseId).padStart(2, "0")}</span>
                 <h1 className="text-base font-semibold">{exercise.title}</h1>
-                <span className={`badge ${exercise.difficulty === "beginner" ? "badge-beginner" : "badge-intermediate"}`}>{exercise.difficulty}</span>
+                {selectedLevel && (
+                  <span className={`badge ${selectedLevel === "beginner" ? "badge-beginner" : "badge-intermediate"}`}>{selectedLevel}</span>
+                )}
               </div>
-              <p className="text-gray-500 text-xs mt-0.5">{exercise.prompt}</p>
+              <p className="text-gray-500 text-xs mt-0.5">
+                {selectedLevel ? exercise.levels[selectedLevel].prompt : exercise.description}
+              </p>
             </div>
           </div>
           <div className="hidden md:flex items-center gap-1">
@@ -120,6 +125,32 @@ export default function ExercisePage() {
 
       {/* Content */}
       <div className="max-w-6xl mx-auto px-6 py-8 animate-fade-in">
+        {phase === "level_select" && (
+          <div className="max-w-4xl mx-auto py-12 animate-fade-up">
+            <div className="text-center mb-10">
+              <h2 className="text-3xl font-extrabold mb-3">Select Difficulty</h2>
+              <p className="text-gray-500">Choose a level to tailor the exercise prompt to your current skill.</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {(["beginner", "intermediate", "expert"] as DifficultyLevel[]).map((level) => (
+                <div 
+                  key={level} 
+                  className="glass-card p-6 cursor-pointer hover:border-orange-400 hover:-translate-y-1 transition-all group"
+                  onClick={() => { setSelectedLevel(level); setPhase("spec"); }}
+                >
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-4 ${level === "beginner" ? "bg-green-100 text-green-600" : level === "intermediate" ? "bg-orange-100 text-orange-600" : "bg-red-100 text-red-600"}`}>
+                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-bold capitalize mb-3 text-gray-900 group-hover:text-orange-600 transition-colors">{level}</h3>
+                  <p className="text-sm text-gray-500 line-clamp-4">{exercise.levels[level].prompt}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {phase === "spec" && (
           <div className="animate-fade-up">
             <div className="max-w-2xl mx-auto mb-6">
@@ -129,7 +160,7 @@ export default function ExercisePage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-orange-600 uppercase tracking-wider mb-1">Hint</p>
-                  <p className="text-sm text-gray-600 leading-relaxed">{exercise.starterHint}</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{exercise.levels[selectedLevel!].starterHint}</p>
                 </div>
               </div>
             </div>

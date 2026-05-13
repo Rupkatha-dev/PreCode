@@ -1,4 +1,5 @@
-export type Phase = "spec" | "coding" | "reflection" | "done"
+export type DifficultyLevel = "beginner" | "intermediate" | "expert"
+export type Phase = "level_select" | "spec" | "coding" | "reflection" | "done"
 
 export interface Message {
   role: "user" | "assistant"
@@ -6,17 +7,20 @@ export interface Message {
 }
 
 export interface ClarifyPayload {
+  prompt: string
   spec: string
   history: Message[]
 }
 
 export interface ChatPayload {
+  prompt: string
   code: string
   message: string
   history: Message[]
 }
 
 export interface SubmitPayload {
+  prompt: string
   spec: string
   code: string
 }

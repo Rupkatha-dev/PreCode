@@ -198,17 +198,11 @@ export default function CourseDashboard() {
                           </h3>
                         </div>
                         <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
-                          {ex.prompt}
+                          {ex.description}
                         </p>
                         <div className="flex flex-wrap items-center gap-2 mt-3">
-                          <span
-                            className={`badge ${
-                              ex.difficulty === "beginner"
-                                ? "badge-beginner"
-                                : "badge-intermediate"
-                            }`}
-                          >
-                            {ex.difficulty}
+                          <span className="badge badge-beginner">
+                            3 Levels
                           </span>
                           {ex.concepts.map((c) => (
                             <span key={c} className="badge badge-concept">

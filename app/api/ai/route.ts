@@ -35,14 +35,15 @@ export async function POST(req: NextRequest) {
     const body: AIRequestBody = await req.json()
 
     if (body.type === "clarify") {
-      const { spec, history } = body.payload
+      const { prompt, spec, history } = body.payload
+      const contextualSystem = `${SYSTEM_PROMPTS.clarify}\n\nExercise Prompt:\n${prompt}`
       const messages = [
         ...history.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
         { role: "user" as const, content: spec },
       ]
       const completion = await getGroq().chat.completions.create({
         model: MODEL,
-        messages: [{ role: "system", content: SYSTEM_PROMPTS.clarify }, ...messages],
+        messages: [{ role: "system", content: contextualSystem }, ...messages],
         temperature: 0.4,
         max_tokens: 512,
       })
@@ -52,8 +53,8 @@ export async function POST(req: NextRequest) {
     }
 
     if (body.type === "chat") {
-      const { code, message, history } = body.payload
-      const contextualSystem = `${SYSTEM_PROMPTS.chat}\n\nCurrent student code:\n\`\`\`\n${code}\n\`\`\``
+      const { prompt, code, message, history } = body.payload
+      const contextualSystem = `${SYSTEM_PROMPTS.chat}\n\nExercise Prompt:\n${prompt}\n\nCurrent student code:\n\`\`\`\n${code}\n\`\`\``
       const messages = [
         ...history.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })),
         { role: "user" as const, content: message },
@@ -68,12 +69,13 @@ export async function POST(req: NextRequest) {
     }
 
     if (body.type === "submit") {
-      const { spec, code } = body.payload
+      const { prompt, spec, code } = body.payload
+      const contextualSystem = `${SYSTEM_PROMPTS.submit}\n\nExercise Prompt:\n${prompt}`
       const userContent = `SPEC:\n${spec}\n\nCODE:\n${code}`
       const completion = await getGroq().chat.completions.create({
         model: MODEL,
         messages: [
-          { role: "system", content: SYSTEM_PROMPTS.submit },
+          { role: "system", content: contextualSystem },
           { role: "user", content: userContent },
         ],
         temperature: 0.5,
