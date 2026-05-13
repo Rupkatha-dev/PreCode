@@ -11,8 +11,8 @@ interface CodeBoxProps {
 export default function CodeBox({ code, onCodeChange, isEnabled }: CodeBoxProps) {
   return (
     <div
-      className={`h-full border rounded-sm overflow-hidden transition-opacity ${
-        isEnabled ? "border-neutral-700 opacity-100" : "border-neutral-900 opacity-50"
+      className={`h-full border rounded-sm overflow-hidden transition-opacity shadow-sm ${
+        isEnabled ? "border-gray-200 opacity-100" : "border-gray-200 opacity-50"
       }`}
     >
       <Editor
@@ -22,7 +22,7 @@ export default function CodeBox({ code, onCodeChange, isEnabled }: CodeBoxProps)
         onChange={(val) => {
           if (isEnabled) onCodeChange(val ?? "")
         }}
-        theme="vs-dark"
+        theme="light"
         options={{
           readOnly: !isEnabled,
           minimap: { enabled: false },
