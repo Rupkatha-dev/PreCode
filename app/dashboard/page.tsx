@@ -74,26 +74,26 @@ export default function CourseDashboard() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-orange-50 text-gray-900">
       {/* ── Header / Navigation ──────────────────────────────── */}
       {mounted && user && (
         <header className="absolute top-0 left-0 right-0 z-50 p-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-violet-500 to-fuchsia-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg">
+            <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-lg">
               P
             </div>
-            <span className="text-xl font-bold tracking-tight text-white">PreCode</span>
+            <span className="text-xl font-bold tracking-tight text-gray-900">PreCode</span>
           </div>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               {user.photoURL ? (
-                <img src={user.photoURL} alt="Avatar" className="w-8 h-8 rounded-full border border-neutral-800" />
+                <img src={user.photoURL} alt="Avatar" className="w-8 h-8 rounded-full border border-gray-200" />
               ) : (
-                <div className="w-8 h-8 rounded-full bg-neutral-800 flex items-center justify-center text-sm font-bold">
+                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-sm font-bold text-gray-700">
                   {user.displayName?.charAt(0) || user.email?.charAt(0) || 'U'}
                 </div>
               )}
-              <span className="text-sm font-medium text-neutral-300 hidden sm:block">
+              <span className="text-sm font-medium text-gray-600 hidden sm:block">
                 {user.displayName || user.email}
               </span>
             </div>
@@ -102,7 +102,7 @@ export default function CourseDashboard() {
                 await logOut()
                 router.push('/')
               }}
-              className="text-sm font-semibold bg-neutral-900 border border-neutral-800 text-neutral-300 px-4 py-2 rounded-full hover:bg-neutral-800 hover:text-white transition-all shadow-md"
+              className="text-sm font-semibold bg-white border border-gray-200 text-gray-700 px-4 py-2 rounded-full hover:bg-gray-50 hover:text-gray-900 transition-all shadow-sm"
             >
               Log out
             </button>
@@ -117,19 +117,19 @@ export default function CourseDashboard() {
           className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full opacity-20 blur-[120px] pointer-events-none"
           style={{
             background:
-              "radial-gradient(circle, rgba(139,92,246,0.4) 0%, transparent 70%)",
+              "radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%)",
           }}
         />
 
         <div className="relative max-w-3xl mx-auto px-6 pt-20 pb-12 text-center">
           <div className="animate-fade-up">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500 mb-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-orange-500 mb-4">
               AI-Powered Learning
             </p>
-            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-4">
+            <h1 className="text-5xl sm:text-6xl font-extrabold tracking-tight mb-4 text-gray-900">
               <span className="gradient-text">PreCode</span>
             </h1>
-            <p className="text-neutral-400 text-lg max-w-lg mx-auto leading-relaxed">
+            <p className="text-gray-500 text-lg max-w-lg mx-auto leading-relaxed">
               Think before you type. A structured course that teaches you to
               plan, specify, and reflect on every function you write.
             </p>
@@ -138,13 +138,13 @@ export default function CourseDashboard() {
           {/* Progress bar */}
           {mounted && (
             <div className="mt-10 animate-fade-up delay-2">
-              <div className="flex items-center justify-between text-xs text-neutral-500 mb-2">
+              <div className="flex items-center justify-between text-xs text-gray-500 mb-2">
                 <span>Course Progress</span>
                 <span>
                   {completedCount} / {EXERCISES.length} completed
                 </span>
               </div>
-              <div className="w-full h-2 bg-neutral-900 rounded-full overflow-hidden border border-neutral-800">
+              <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden border border-gray-200">
                 <div
                   className="progress-bar-fill h-full"
                   style={{ width: `${progressPercent}%` }}
@@ -190,14 +190,14 @@ export default function CourseDashboard() {
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-3 mb-1.5">
-                          <span className="text-xs font-bold text-neutral-600">
+                          <span className="text-xs font-bold text-gray-400">
                             {String(idx + 1).padStart(2, "0")}
                           </span>
-                          <h3 className="text-base font-semibold truncate">
+                          <h3 className="text-base font-semibold text-gray-900 truncate">
                             {ex.title}
                           </h3>
                         </div>
-                        <p className="text-sm text-neutral-500 leading-relaxed line-clamp-2">
+                        <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
                           {ex.prompt}
                         </p>
                         <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -238,9 +238,9 @@ export default function CourseDashboard() {
                           </div>
                         )}
                         {isCurrent && (
-                          <div className="w-8 h-8 rounded-full bg-violet-500/15 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full bg-orange-500/15 flex items-center justify-center">
                             <svg
-                              className="w-4 h-4 text-violet-400"
+                              className="w-4 h-4 text-orange-500"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -255,9 +255,9 @@ export default function CourseDashboard() {
                           </div>
                         )}
                         {!isDone && !isCurrent && (
-                          <div className="w-8 h-8 rounded-full bg-neutral-800/50 flex items-center justify-center">
+                          <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center border border-gray-200">
                             <svg
-                              className="w-4 h-4 text-neutral-600"
+                              className="w-4 h-4 text-gray-400"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke="currentColor"
@@ -276,11 +276,11 @@ export default function CourseDashboard() {
 
                     {/* Bottom action row for current */}
                     {isCurrent && (
-                      <div className="mt-4 pt-3 border-t border-violet-500/15 flex items-center justify-between">
-                        <span className="text-xs text-violet-400 font-medium">
+                      <div className="mt-4 pt-3 border-t border-orange-500/15 flex items-center justify-between">
+                        <span className="text-xs text-orange-600 font-medium">
                           Ready to start
                         </span>
-                        <span className="text-xs text-violet-400/60">
+                        <span className="text-xs text-orange-600/60">
                           Click to begin &rarr;
                         </span>
                       </div>
@@ -293,7 +293,7 @@ export default function CourseDashboard() {
                 <Link
                   key={ex.id}
                   href={`/exercise/${ex.id}`}
-                  className="block no-underline text-white"
+                  className="block no-underline text-gray-900"
                 >
                   {card}
                 </Link>

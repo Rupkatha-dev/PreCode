@@ -13,8 +13,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #000;
-  color: #fff;
+  background: #f9fafb;
+  color: #111827;
 }
 
 /* ── Custom scrollbar ──────────────────────────────────── */
@@ -27,12 +27,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
 }
 
 /* ── Keyframe animations ───────────────────────────────── */
@@ -65,10 +65,10 @@ body {
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.15);
   }
   50% {
-    box-shadow: 0 0 35px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 35px rgba(249, 115, 22, 0.3);
   }
 }
 
@@ -148,22 +148,24 @@ body {
 
 /* ── Glassmorphism card ────────────────────────────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(249, 115, 22, 0.15);
   backdrop-filter: blur(12px);
   border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(249, 115, 22, 0.3);
   transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
 }
 
 .glass-card-active {
-  background: rgba(139, 92, 246, 0.08);
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: rgba(249, 115, 22, 0.05);
+  border: 1px solid rgba(249, 115, 22, 0.4);
   backdrop-filter: blur(12px);
   border-radius: 12px;
   animation: pulse-glow 3s ease-in-out infinite;
@@ -171,14 +173,14 @@ body {
 }
 
 .glass-card-active:hover {
-  background: rgba(139, 92, 246, 0.14);
-  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(249, 115, 22, 0.1);
+  border-color: rgba(249, 115, 22, 0.6);
   transform: translateY(-2px);
 }
 
 .glass-card-done {
   background: rgba(34, 197, 94, 0.05);
-  border: 1px solid rgba(34, 197, 94, 0.15);
+  border: 1px solid rgba(34, 197, 94, 0.2);
   backdrop-filter: blur(12px);
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -186,12 +188,12 @@ body {
 
 .glass-card-done:hover {
   background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.25);
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
 /* ── Gradient accent ───────────────────────────────────── */
 .gradient-text {
-  background: linear-gradient(135deg, #a78bfa, #818cf8, #6366f1);
+  background: linear-gradient(135deg, #f97316, #f43f5e);
   background-size: 200% 200%;
   animation: gradient-shift 4s ease infinite;
   -webkit-background-clip: text;
@@ -209,7 +211,7 @@ body {
   inset: 0;
   border-radius: 12px;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(99, 102, 241, 0.5));
+  background: linear-gradient(135deg, rgba(249, 115, 22, 0.5), rgba(244, 63, 94, 0.5));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -219,7 +221,7 @@ body {
 
 /* ── Progress bar ──────────────────────────────────────── */
 .progress-bar-fill {
-  background: linear-gradient(90deg, #a78bfa, #818cf8, #6366f1);
+  background: linear-gradient(90deg, #fb923c, #f97316, #ea580c);
   background-size: 200% 100%;
   animation: shimmer 2s linear infinite;
   border-radius: 9999px;
@@ -231,8 +233,8 @@ body {
   width: 2px;
   background: linear-gradient(
     180deg,
-    rgba(139, 92, 246, 0.4) 0%,
-    rgba(255, 255, 255, 0.06) 100%
+    rgba(249, 115, 22, 0.4) 0%,
+    rgba(0, 0, 0, 0.06) 100%
   );
 }
 
@@ -240,16 +242,16 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  background: #0a0a0a;
+  border: 2px solid #d1d5db;
+  background: #fff;
   transition: all 0.3s ease;
   flex-shrink: 0;
 }
 
 .timeline-dot-active {
-  border-color: #a78bfa;
-  background: #a78bfa;
-  box-shadow: 0 0 12px rgba(139, 92, 246, 0.5);
+  border-color: #f97316;
+  background: #f97316;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
 }
 
 .timeline-dot-done {
@@ -260,7 +262,7 @@ body {
 
 /* ── Button styles ─────────────────────────────────────── */
 .btn-primary {
-  background: linear-gradient(135deg, #a78bfa, #818cf8);
+  background: linear-gradient(135deg, #f97316, #f43f5e);
   color: #fff;
   font-weight: 600;
   padding: 0.625rem 1.75rem;
@@ -273,7 +275,7 @@ body {
 
 .btn-primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(139, 92, 246, 0.35);
+  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
 }
 
 .btn-primary:disabled {
@@ -284,20 +286,21 @@ body {
 }
 
 .btn-secondary {
-  background: rgba(255, 255, 255, 0.06);
-  color: #e5e5e5;
+  background: #fff;
+  color: #374151;
   font-weight: 500;
   padding: 0.625rem 1.75rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid #d1d5db;
   transition: all 0.3s ease;
   cursor: pointer;
   font-size: 0.9rem;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: #f9fafb;
+  border-color: #9ca3af;
 }
 
 /* ── Phase stepper ─────────────────────────────────────── */
@@ -309,22 +312,22 @@ body {
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: rgba(255, 255, 255, 0.25);
+  color: #9ca3af;
   transition: color 0.3s ease;
 }
 
 .phase-step-active {
-  color: #a78bfa;
+  color: #f97316;
 }
 
 .phase-step-done {
-  color: rgba(255, 255, 255, 0.5);
+  color: #6b7280;
 }
 
 .phase-connector {
   width: 24px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #e5e7eb;
 }
 
 /* ── Badge ─────────────────────────────────────────────── */
@@ -340,19 +343,19 @@ body {
 }
 
 .badge-beginner {
-  background: rgba(34, 197, 94, 0.12);
-  color: #4ade80;
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  background: rgba(34, 197, 94, 0.1);
+  color: #166534;
+  border: 1px solid rgba(34, 197, 94, 0.3);
 }
 
 .badge-intermediate {
-  background: rgba(251, 191, 36, 0.12);
-  color: #fbbf24;
-  border: 1px solid rgba(251, 191, 36, 0.2);
+  background: rgba(251, 191, 36, 0.15);
+  color: #92400e;
+  border: 1px solid rgba(251, 191, 36, 0.4);
 }
 
 .badge-concept {
-  background: rgba(255, 255, 255, 0.05);
-  color: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f3f4f6;
+  color: #4b5563;
+  border: 1px solid #d1d5db;
 }

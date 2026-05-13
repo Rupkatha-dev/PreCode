@@ -47,7 +47,7 @@ export default function ExercisePage() {
   }, [exercise, router])
 
   if (!exercise) {
-    return <main className="min-h-screen bg-black text-white flex items-center justify-center"><p className="text-neutral-500">Loading...</p></main>
+    return <main className="min-h-screen bg-orange-50 text-gray-900 flex items-center justify-center"><p className="text-gray-500">Loading...</p></main>
   }
 
   const nextExercise = EXERCISES.find((e) => e.id === exerciseId + 1)
@@ -87,21 +87,21 @@ export default function ExercisePage() {
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-orange-50 text-gray-900">
       {/* Top bar */}
-      <div className="border-b border-neutral-800/60 px-6 py-4 bg-black/80 backdrop-blur-lg sticky top-0 z-50">
+      <div className="border-b border-gray-200 px-6 py-4 bg-white/80 backdrop-blur-lg sticky top-0 z-50">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/" className="text-neutral-600 hover:text-neutral-300 transition-colors" title="Back to course">
+            <Link href="/" className="text-gray-400 hover:text-gray-600 transition-colors" title="Back to course">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-neutral-600">{String(exerciseId).padStart(2, "0")}</span>
+                <span className="text-xs font-bold text-gray-400">{String(exerciseId).padStart(2, "0")}</span>
                 <h1 className="text-base font-semibold">{exercise.title}</h1>
                 <span className={`badge ${exercise.difficulty === "beginner" ? "badge-beginner" : "badge-intermediate"}`}>{exercise.difficulty}</span>
               </div>
-              <p className="text-neutral-500 text-xs mt-0.5">{exercise.prompt}</p>
+              <p className="text-gray-500 text-xs mt-0.5">{exercise.prompt}</p>
             </div>
           </div>
           <div className="hidden md:flex items-center gap-1">
@@ -124,12 +124,12 @@ export default function ExercisePage() {
           <div className="animate-fade-up">
             <div className="max-w-2xl mx-auto mb-6">
               <div className="glass-card p-4 flex items-start gap-3">
-                <div className="w-8 h-8 rounded-lg bg-violet-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <svg className="w-4 h-4 text-violet-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                <div className="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <svg className="w-4 h-4 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-violet-400 uppercase tracking-wider mb-1">Hint</p>
-                  <p className="text-sm text-neutral-400 leading-relaxed">{exercise.starterHint}</p>
+                  <p className="text-xs font-semibold text-orange-600 uppercase tracking-wider mb-1">Hint</p>
+                  <p className="text-sm text-gray-600 leading-relaxed">{exercise.starterHint}</p>
                 </div>
               </div>
             </div>
@@ -152,12 +152,12 @@ export default function ExercisePage() {
         {phase === "reflection" && (
           <div className="max-w-2xl mx-auto space-y-6 animate-fade-up">
             <div className="glass-card p-6">
-              <h2 className="text-sm font-semibold text-violet-400 uppercase tracking-wider mb-4">AI Feedback</h2>
-              <div className="text-neutral-300 text-sm whitespace-pre-wrap leading-relaxed">{aiReflection}</div>
+              <h2 className="text-sm font-semibold text-orange-600 uppercase tracking-wider mb-4">AI Feedback</h2>
+              <div className="text-gray-700 text-sm whitespace-pre-wrap leading-relaxed">{aiReflection}</div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-neutral-500 uppercase tracking-wider mb-3">Your Reflection</label>
-              <textarea value={studentReflection} onChange={(e) => setStudentReflection(e.target.value)} rows={5} placeholder="Write your reflection here..." className="w-full bg-neutral-950 border border-neutral-800 rounded-xl p-4 text-white text-sm placeholder-neutral-600 focus:outline-none focus:border-violet-500/50 resize-none transition-all" />
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Your Reflection</label>
+              <textarea value={studentReflection} onChange={(e) => setStudentReflection(e.target.value)} rows={5} placeholder="Write your reflection here..." className="w-full bg-white border border-gray-200 rounded-xl p-4 text-gray-900 text-sm placeholder-gray-400 focus:outline-none focus:border-orange-500/50 resize-none transition-all" />
             </div>
             <button onClick={handleReflectionSubmit} disabled={isLoading || !studentReflection.trim()} className="btn-primary">{isLoading ? "Saving..." : "Complete Exercise"}</button>
           </div>
@@ -169,7 +169,7 @@ export default function ExercisePage() {
               <svg className="w-10 h-10 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
             </div>
             <h2 className="text-2xl font-bold mb-2">Exercise Complete</h2>
-            <p className="text-neutral-500 mb-8 text-sm">Great job thinking before coding. Your session has been saved.</p>
+            <p className="text-gray-500 mb-8 text-sm">Great job thinking before coding. Your session has been saved.</p>
             <div className="flex items-center justify-center gap-3">
               {nextExercise ? (
                 <>
