@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,11 +8,8 @@
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #f9fafb;
-  color: #111827;
 }
 
 /* ── Custom scrollbar ──────────────────────────────────── */
@@ -148,84 +143,42 @@ body {
 
 /* ── Glassmorphism card ────────────────────────────────── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(249, 115, 22, 0.15);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+  background: #ffffff;
+  border: 1px solid #e7e5e4;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.04);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(249, 115, 22, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  border-color: #d6d3d1;
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px -5px rgba(0,0,0,0.06);
 }
 
 .glass-card-active {
-  background: rgba(249, 115, 22, 0.05);
-  border: 1px solid rgba(249, 115, 22, 0.4);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  animation: pulse-glow 3s ease-in-out infinite;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card-active:hover {
-  background: rgba(249, 115, 22, 0.1);
-  border-color: rgba(249, 115, 22, 0.6);
-  transform: translateY(-2px);
+  background: #ffedd5;
+  border-color: #fdba74;
+  transform: translateY(-1px);
 }
 
 .glass-card-done {
-  background: rgba(34, 197, 94, 0.05);
-  border: 1px solid rgba(34, 197, 94, 0.2);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card-done:hover {
-  background: rgba(34, 197, 94, 0.1);
-  border-color: rgba(34, 197, 94, 0.3);
-}
-
-/* ── Gradient accent ───────────────────────────────────── */
-.gradient-text {
-  background: linear-gradient(135deg, #f97316, #f43f5e);
-  background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-border {
-  position: relative;
-}
-
-.gradient-border::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(249, 115, 22, 0.5), rgba(244, 63, 94, 0.5));
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-
-/* ── Progress bar ──────────────────────────────────────── */
-.progress-bar-fill {
-  background: linear-gradient(90deg, #fb923c, #f97316, #ea580c);
-  background-size: 200% 100%;
-  animation: shimmer 2s linear infinite;
-  border-radius: 9999px;
-  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #dcfce7;
+  border-color: #86efac;
 }
 
 /* ── Timeline connector ────────────────────────────────── */
@@ -233,8 +186,8 @@ body {
   width: 2px;
   background: linear-gradient(
     180deg,
-    rgba(249, 115, 22, 0.4) 0%,
-    rgba(0, 0, 0, 0.06) 100%
+    rgba(249, 115, 22, 0.3) 0%,
+    rgba(231, 229, 228, 1) 100%
   );
 }
 
@@ -242,7 +195,7 @@ body {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 2px solid #d1d5db;
+  border: 2px solid #d6d3d1;
   background: #fff;
   transition: all 0.3s ease;
   flex-shrink: 0;
@@ -251,83 +204,34 @@ body {
 .timeline-dot-active {
   border-color: #f97316;
   background: #f97316;
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
 }
 
 .timeline-dot-done {
   border-color: #22c55e;
   background: #22c55e;
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
-}
-
-/* ── Button styles ─────────────────────────────────────── */
-.btn-primary {
-  background: linear-gradient(135deg, #f97316, #f43f5e);
-  color: #fff;
-  font-weight: 600;
-  padding: 0.625rem 1.75rem;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  border: none;
-  cursor: pointer;
-  font-size: 0.9rem;
-}
-
-.btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 8px 25px rgba(249, 115, 22, 0.3);
-}
-
-.btn-primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  transform: none;
-  box-shadow: none;
-}
-
-.btn-secondary {
-  background: #fff;
-  color: #374151;
-  font-weight: 500;
-  padding: 0.625rem 1.75rem;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-size: 0.9rem;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-}
-
-.btn-secondary:hover {
-  background: #f9fafb;
-  border-color: #9ca3af;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
 /* ── Phase stepper ─────────────────────────────────────── */
 .phase-step {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.75rem;
+  gap: 6px;
+  font-size: 0.7rem;
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #9ca3af;
+  color: #a8a29e;
   transition: color 0.3s ease;
 }
 
 .phase-step-active {
-  color: #f97316;
+  color: #c2410c;
 }
 
 .phase-step-done {
-  color: #6b7280;
-}
-
-.phase-connector {
-  width: 24px;
-  height: 1px;
-  background: #e5e7eb;
+  color: #78716c;
 }
 
 /* ── Badge ─────────────────────────────────────────────── */
@@ -343,19 +247,19 @@ body {
 }
 
 .badge-beginner {
-  background: rgba(34, 197, 94, 0.1);
+  background: #f0fdf4;
   color: #166534;
-  border: 1px solid rgba(34, 197, 94, 0.3);
+  border: 1px solid #bbf7d0;
 }
 
 .badge-intermediate {
-  background: rgba(251, 191, 36, 0.15);
+  background: #fffbeb;
   color: #92400e;
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  border: 1px solid #fde68a;
 }
 
 .badge-concept {
-  background: #f3f4f6;
-  color: #4b5563;
-  border: 1px solid #d1d5db;
+  background: #fafaf9;
+  color: #57534e;
+  border: 1px solid #e7e5e4;
 }

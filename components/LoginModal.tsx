@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { signInWithGoogle, signInWithGithub } from "@/lib/firebase"
+import { useState, useEffect } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { signInWithGoogle, signInWithGithub } from "@/lib/firebase"
 
 interface LoginModalProps {
   isOpen: boolean
@@ -36,29 +37,29 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
+        className="absolute inset-0 bg-stone-900/30 backdrop-blur-sm transition-opacity animate-in fade-in duration-300"
         onClick={onClose}
       />
       
       {/* Modal Content */}
-      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-white/20">
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-in zoom-in-95 duration-200 border border-stone-100">
         <div className="px-8 py-10">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold text-2xl shadow-lg mb-4">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-orange-600 text-white font-bold text-2xl shadow-sm mb-4">
               P
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome to PreCode</h2>
-            <p className="text-gray-500 text-sm">Choose your preferred way to continue</p>
+            <h2 className="font-serif text-3xl text-stone-900 mb-2">Welcome</h2>
+            <p className="text-stone-500 text-sm">Choose your preferred way to continue</p>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3">
             <button
               onClick={() => handleLogin('google')}
               disabled={!!loading}
-              className="w-full flex items-center justify-center gap-3 bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-sm hover:shadow-md disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 bg-white border border-stone-200 hover:border-stone-300 hover:bg-stone-50 text-stone-700 font-medium py-3 px-6 rounded-2xl transition-all shadow-sm disabled:opacity-50"
             >
               {loading === 'google' ? (
-                <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-stone-300 border-t-stone-600 rounded-full animate-spin" />
               ) : (
                 <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
@@ -73,7 +74,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             <button
               onClick={() => handleLogin('github')}
               disabled={!!loading}
-              className="w-full flex items-center justify-center gap-3 bg-[#24292e] hover:bg-black text-white font-semibold py-3.5 px-6 rounded-2xl transition-all shadow-lg hover:shadow-xl disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3 bg-stone-900 hover:bg-stone-800 text-white font-medium py-3 px-6 rounded-2xl transition-all shadow-lg disabled:opacity-50"
             >
               {loading === 'github' ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -87,7 +88,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
           </div>
 
           <div className="mt-8 text-center">
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-stone-400">
               By continuing, you agree to our Terms of Service and Privacy Policy.
             </p>
           </div>
@@ -96,7 +97,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         {/* Close Button */}
         <button 
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+          className="absolute top-4 right-4 p-2 text-stone-400 hover:text-stone-700 hover:bg-stone-100 rounded-full transition-colors"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

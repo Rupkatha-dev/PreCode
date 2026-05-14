@@ -11,8 +11,8 @@ interface CodeBoxProps {
 export default function CodeBox({ code, onCodeChange, isEnabled }: CodeBoxProps) {
   return (
     <div
-      className={`h-full border rounded-sm overflow-hidden transition-opacity shadow-sm ${
-        isEnabled ? "border-gray-200 opacity-100" : "border-gray-200 opacity-50"
+      className={`h-full border rounded-2xl overflow-hidden transition-opacity shadow-sm ${
+        isEnabled ? "border-stone-200 opacity-100" : "border-stone-200 opacity-50"
       }`}
     >
       <Editor
@@ -30,7 +30,8 @@ export default function CodeBox({ code, onCodeChange, isEnabled }: CodeBoxProps)
           lineNumbers: "on",
           scrollBeyondLastLine: false,
           wordWrap: "on",
-          padding: { top: 12 },
+          padding: { top: 16 },
+          fontFamily: "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
         }}
       />
     </div>
